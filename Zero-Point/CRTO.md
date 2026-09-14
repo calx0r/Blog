@@ -1,7 +1,7 @@
 # CRTO: Learning to Think Like an Operator
 
 <p align="center">
-  <img src="assets/crto.png" alt="Zero-Point Security Red Team Ops" width="200">
+  <img src="assets/CRTO.png" alt="Zero-Point Security Red Team Ops" width="400">
 </p>
 
 ## Introduction
