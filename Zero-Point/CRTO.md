@@ -1,16 +1,20 @@
 # CRTO: Learning to Think Like an Operator
 
+<p align="center">
+  <img src="assets/crto.png" alt="Zero-Point Security Red Team Ops" width="200">
+</p>
+
 ## Introduction
 
-Back in August, I completed the **Certified Red Team Operator (CRTO)** certification from Zero-Point Security. I've had a few weeks to look back on the course and exam, so I wanted to share my experience and some advice for anyone thinking about taking it.
+Back in August, I completed the **Certified Red Team Operator (CRTO)** certification from Zero-Point Security. I've had some time to look back on the course and exam, so I wanted to share what I took away from it.
 
-I currently work as a **Network Security Administrator**, but my goal is to transition into offensive security and eventually work as a red team operator. That's a big reason I decided to take CRTO in the first place.
+I currently work as a **Network Security Administrator**, but offensive security is where I want to take my career, with red teaming being the ultimate goal.
 
-Going into it, I already had experience with penetration testing, Active Directory, Kerberos, and other offensive security training. I had also completed CRTP, so a lot of the underlying AD concepts weren't completely new to me.
+Going into CRTO, I already had experience with penetration testing, Active Directory, Kerberos, and other offensive security training. I had also completed CRTP, so a lot of the underlying AD concepts weren't completely new to me.
 
 CRTO still made me think differently.
 
-The biggest thing I took away from it was learning to stop asking:
+The biggest change was learning to stop asking:
 
 > **"What attack can I run?"**
 
@@ -18,99 +22,9 @@ and start asking:
 
 > **"What does the information in front of me actually allow me to do?"**
 
-That's what I want to focus on here.
+That's probably the biggest lesson I took away from the course.
 
-I'm not going to cover exam objectives, flags, or solutions. There are plenty of reviews that talk about the course material already. I want this to be more about how I approached CRTO, how I would prepare for it, and what I learned from the experience.
-
----
-
-## What Is CRTO?
-
-**CRTO (Certified Red Team Operator)** is the certification for Zero-Point Security's **Red Team Ops** course.
-
-It's focused heavily on Windows and Active Directory environments and teaches you how to work through them using a command-and-control framework.
-
-Some of the main areas you'll run into are:
-
-- Active Directory enumeration
-    
-- Kerberos
-    
-- Credential access
-    
-- Privilege escalation
-    
-- Lateral movement
-    
-- Delegation
-    
-- Persistence
-    
-- Pivoting
-    
-- Command and control
-    
-
-The individual techniques are useful, but I don't think that's the main value of the course.
-
-You can learn how to Kerberoast an account or abuse a specific AD configuration from a blog post. The harder part is recognizing **when that technique actually applies** and how one piece of information connects to another.
-
-You might compromise a system and find an interesting account. That account gives you access somewhere else. On that system, you find another credential or an interesting AD relationship.
-
-Eventually, those small discoveries start forming a path.
-
-That's where CRTO gets interesting.
-
----
-
-## Who Is CRTO For?
-
-I wouldn't make CRTO your first offensive security course.
-
-You don't need to already work as a pentester or red teamer. I don't. But having some experience with Windows and Active Directory will make the course a lot easier to digest.
-
-Before starting, I'd recommend being comfortable with:
-
-- Windows and Active Directory
-    
-- Basic networking
-    
-- PowerShell
-    
-- NTLM and Kerberos
-    
-- Windows authentication
-    
-- Basic privilege escalation
-    
-- Basic lateral movement
-    
-- Reading command-line output
-    
-
-You don't need to be an expert in all of those.
-
-You should at least understand them well enough that you're learning the attack techniques instead of trying to learn Windows, networking, Active Directory, and offensive security all at the same time.
-
-Being comfortable researching things on your own helps a lot too.
-
----
-
-## My Background Going Into CRTO
-
-Most of my professional experience is on the infrastructure and defensive side of security.
-
-As a Network Security Administrator, I work with Active Directory, networking, identity, endpoint security, virtualization, Microsoft security tooling, and other enterprise infrastructure.
-
-Offensive security is what I've been pursuing outside of work.
-
-Before CRTO, I had already spent a lot of time working through penetration testing and Active Directory material. I had also completed **CRTP**, so concepts like Kerberos tickets, SPNs, delegation, lateral movement, and AD permissions were familiar.
-
-That definitely gave me a head start.
-
-At the same time, CRTO showed me that knowing how an attack works doesn't necessarily mean you'll recognize when you can use it.
-
-I think that's an important distinction.
+I'm not going to cover exam objectives, flags, or solutions here. This is more about how CRTO changed the way I approach an environment and what I'd recommend to someone preparing for it.
 
 ---
 
@@ -134,40 +48,83 @@ Profit 😎
 
 I've made plenty of notes like that.
 
-They're great when you're doing a lab that basically tells you what vulnerability you're supposed to exploit.
-
-They're a lot less useful when nobody tells you what attack you're looking for.
+They're great when you're doing a lab that basically tells you what vulnerability you're supposed to exploit. They're a lot less useful when nobody tells you what you're looking for.
 
 Instead, I started asking myself simpler questions:
 
 - Who am I?
-    
 - What privileges do I have?
-    
 - What machine am I on?
-    
 - What credentials or tickets do I have?
-    
 - Where can this account authenticate?
-    
 - What relationships have I found?
-    
 - Does anything look unusual?
-    
 - Why does it matter?
-    
 
 That last question is huge.
 
-If LDAP enumeration gives you an attribute you've never seen before, don't ignore it because it isn't immediately useful. Look it up. Figure out what it controls and why it's configured that way.
+If enumeration gives you an attribute or relationship you've never seen before, don't ignore it because it isn't immediately useful. Look it up. Figure out what it controls and why it's configured that way.
 
-Sometimes that one weird line of output is exactly what you've been looking for.
+Sometimes that weird line of output is exactly what you've been looking for.
+
+---
+
+## Keep Enumerating
+
+One mistake that's easy to make is treating enumeration as something you only do at the beginning.
+
+Enumerate the domain, find something interesting, attack it, move on.
+
+The problem is that your position keeps changing.
+
+If you compromise another user, that user may have completely different access.
+
+If you land on another machine, there may be different sessions, credentials, services, and configurations.
+
+If your privileges change, you may be able to see things you couldn't before.
+
+So whenever my position changed, I tried to remind myself to look around again.
+
+```text
+Enumerate
+    ↓
+Find something
+    ↓
+Understand it
+    ↓
+Test it
+    ↓
+Gain new access
+    ↓
+Enumerate again 🔄
+```
+
+I also stopped immediately running through a mental checklist every time I got access to something:
+
+```text
+Kerberoasting?
+AS-REP roasting?
+Delegation?
+AD CS?
+Credential dumping?
+BloodHound?
+```
+
+There's nothing wrong with knowing those techniques. The problem is using them just because you know them.
+
+I had much better results when I let the environment tell me what to look at next.
+
+Find something interesting. Understand what it means. Figure out whether you can do anything with it. Then choose the technique.
+
+It sounds obvious, but under pressure it's really easy to start throwing commands at an environment hoping something sticks.
 
 ---
 
 ## Learn Kerberos
 
-I would spend a decent amount of time on Kerberos before taking CRTO.
+If you're preparing for CRTO, spend some time understanding Kerberos.
+
+Seriously.
 
 You don't need to know every detail of the protocol, but this should make sense:
 
@@ -181,117 +138,45 @@ TGS
 Service
 ```
 
-You should understand what a TGT is, what a service ticket is, why SPNs matter, and how those tickets are used to authenticate to services.
+Understand what a TGT is, what a service ticket is, why SPNs matter, and how those tickets are used to authenticate to services.
 
-From there, concepts like delegation start making a lot more sense.
+Once I understood what was happening underneath the attacks, concepts like delegation made a lot more sense.
 
-This helped me more than memorizing individual Kerberos attacks. Once I understood what was happening underneath them, I had a much easier time figuring out why a particular technique might work.
+That helped me more than memorizing individual Kerberos techniques.
 
-If Kerberos still feels like some mysterious Windows magic, spend some extra time there before the exam.
+If Kerberos still feels like mysterious Windows magic, spend some extra time there before the exam.
 
 It'll pay off.
 
 ---
 
-## Keep Enumerating
-
-One mistake that's easy to make is treating enumeration as something you do at the beginning.
-
-Enumerate the domain, find something interesting, attack it, move on.
-
-In reality, your position keeps changing.
-
-If you compromise another user, that user may have completely different access.
-
-If you land on another machine, there may be different sessions, credentials, services, and configurations.
-
-If you become SYSTEM, you can probably see things you couldn't before.
-
-So whenever my position changed, I tried to remind myself to look around again.
-
-```text
-Enumerate
-    ↓
-Find something
-    ↓
-Test it
-    ↓
-Gain new access
-    ↓
-Enumerate again 🔄
-```
-
-It's simple, but it's easy to forget when you're focused on getting to the next objective.
-
----
-
-## Let the Environment Tell You What to Do
-
-When I first started learning AD attacks, it was easy to get a foothold and immediately start running through a mental checklist:
-
-```text
-Kerberoasting?
-AS-REP roasting?
-Delegation?
-AD CS?
-Credential dumping?
-BloodHound?
-```
-
-There's nothing wrong with knowing those techniques.
-
-The problem is running them just because you know them.
-
-I had much better results when I slowed down and let the information I collected determine what I looked at next.
-
-Find something interesting.
-
-Understand what it means.
-
-Figure out whether you can do anything with it.
-
-Then choose the technique.
-
-It sounds obvious written out like that, but under exam pressure it's really easy to start throwing commands at the environment hoping something sticks.
-
----
-
 ## Learn Your C2
 
-Don't treat your C2 like a remote command prompt.
+Another big takeaway for me was learning not to treat a C2 like a fancy remote command prompt.
 
-Take some time to understand how it works.
+Take some time to actually understand how it works.
 
 Know the basics around:
 
 - Beacons
-    
 - Sleep and jitter
-    
 - Jobs
-    
 - Pivoting
-    
 - SOCKS proxies
-    
 - Credential and ticket handling
-    
 - BOFs
-    
 - .NET execution
-    
 - Process execution
-    
 
-I'd also pay attention to what happens when you run something.
+More importantly, start paying attention to what happens when you run something.
 
 Does it spawn another process?
 
 Does it write something to disk?
 
-Is there a built-in capability that can do the same thing?
+Is there a built-in capability that can accomplish the same thing?
 
-How much traffic are you generating?
+How much unnecessary activity are you creating?
 
 These weren't always things I thought about when I first started doing offensive security labs. If the command worked and I got what I needed, I was happy.
 
@@ -319,15 +204,15 @@ Am I creating a process I don't need?
 
 Am I touching disk?
 
-Am I generating a bunch of unnecessary traffic?
+Am I generating unnecessary traffic?
 
-Would a built-in C2 capability accomplish the same thing?
+Would a built-in capability accomplish the same thing?
 
 What would this look like from the defender's side?
 
 I'm still learning this part. Passing CRTO obviously didn't turn me into a red team operator overnight.
 
-It did get me thinking more about the difference between simply getting an objective and how you actually got there.
+It did get me thinking more about the difference between simply achieving an objective and how you actually got there.
 
 That's something I want to keep improving on.
 
@@ -365,7 +250,7 @@ There's a big difference.
 
 You can have the correct attack path and screw up the syntax. You can also have a perfectly valid command for an attack that makes absolutely no sense in your current situation.
 
-And sometimes you've been staring at the terminal for too long and there's a typo right in front of you 😂
+And sometimes you've just been staring at the terminal for too long and there's a typo right in front of you 😂
 
 Don't let the clock convince you that going faster is always the answer.
 
@@ -373,11 +258,9 @@ Don't let the clock convince you that going faster is always the answer.
 
 ## Take Notes That Actually Help You
 
-Notes are obviously important for an exam like CRTO.
+I'd avoid turning your notes into one giant command cheat sheet.
 
-I'd just avoid turning them into one giant command cheat sheet.
-
-For each technique, try to document things like:
+For each technique, document things like:
 
 ```text
 What makes this possible?
@@ -391,38 +274,28 @@ What should I look at next?
 
 Then add your commands.
 
-That way, when you find something interesting, your notes help you understand whether the technique applies instead of just giving you something to copy and paste.
+That way, when you find something interesting, your notes help you determine whether a technique actually applies instead of just giving you something to copy and paste.
 
 Future you will appreciate it too.
 
 ---
 
-## My Advice for Preparing
+## What I'd Focus on Before CRTO
 
-If I were preparing for CRTO again, I'd keep it pretty simple:
+If I were preparing again, I'd keep it pretty simple:
 
 1. **Know your Active Directory fundamentals.**
-    
 2. **Learn Kerberos. Seriously.**
-    
 3. **Understand why attacks work instead of memorizing commands.**
-    
-4. **Get comfortable with the C2 before the exam.**
-    
+4. **Get comfortable with your C2 before the exam.**
 5. **Build notes around prerequisites and relationships.**
-    
 6. **Enumerate again whenever your access changes.**
-    
-7. **Read your output instead of blindly moving to the next command.**
-    
+7. **Actually read your output.**
 8. **When you're stuck, verify what you know before looking for something more complicated.**
-    
-9. **Get comfortable researching unfamiliar things.**
-    
+9. **Get comfortable researching things you don't recognize.**
 10. **Stay curious.**
-    
 
-I think that last one helped me more than I expected.
+That last one helped me more than I expected.
 
 If you find something you don't recognize, look into it. Don't assume it isn't relevant just because you haven't seen it before.
 
@@ -430,29 +303,21 @@ If you find something you don't recognize, look into it. Don't assume it isn't r
 
 ## CRTO Didn't Make Me a Red Teamer
 
-I want to be clear about this because of the name of the certification.
+Passing CRTO obviously didn't make me a red team operator overnight.
 
-I passed the **Certified Red Team Operator** exam.
+If anything, it showed me how much more there is to learn about C2, OPSEC, Windows internals, EDR, identity attacks, payload development, and the infrastructure behind an operation.
 
-I don't consider myself a red team operator because of that.
+That's also what keeps me interested in this field.
 
-I'm a Network Security Administrator who's working toward transitioning into offensive security and eventually red teaming.
+I'm not interested in collecting enough certifications to suddenly call myself a red teamer. I want to build the knowledge and experience to eventually become a good one.
 
-CRTO is another step in that direction.
-
-There's still a ridiculous amount I want to learn about Windows internals, EDR, C2 infrastructure, OPSEC, payload development, identity attacks, detection, and red-team infrastructure.
-
-The more I learn, the more I realize how much I don't know.
-
-That's part of what keeps this interesting.
-
-I'm not trying to collect enough certifications to suddenly declare myself a red teamer. I want to build the knowledge and experience to eventually become a good one.
+CRTO was another step in that direction, not the finish line.
 
 ---
 
 ## Final Thoughts
 
-A few weeks after finishing CRTO, I think the biggest thing I've carried with me is a different way of approaching problems.
+The biggest thing I've carried with me from CRTO is a different way of approaching problems.
 
 Look at what you have.
 
@@ -468,11 +333,11 @@ See what changed.
 
 Then look around again.
 
-Tools and commands are obviously important, but they're the part that's easiest to look up.
+Tools and commands are important, but they're also the easiest part to look up.
 
 Understanding **why** something works is harder, and I think it's a lot more valuable.
 
-I'm still early in my path toward red teaming and have plenty left to learn. CRTO didn't make me an operator, but I do think it helped point me in the right direction.
+I'm still early in my path toward red teaming and have plenty left to learn, but CRTO helped point me in the direction I want to go.
 
 If I had to sum up the entire experience in one line:
 
